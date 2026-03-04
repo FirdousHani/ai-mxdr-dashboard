@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MXDR — Live Threat Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Exo+2:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg: #060d1a;
+      --surface: #0c1829;
+      --card: #0f1f35;
+      --border: #1a3050;
+      --accent: #00d4ff;
+      --red: #ff4757;
+      --orange: #ff7f00;
+      --yellow: #ffd700;
+      --green: #2ed573;
+      --purple: #a855f7;
+      --text: #d0e8f5;
+      --muted: #4a7090;
+      --mono: 'Share Tech Mono', monospace;
+      --sans: 'Exo 2', sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      min-height: 100vh;
+    }
+
+    /* ── TOP BAR ──────────────────────────────────────────────── */
+    .topbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 1.5rem;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .brand {
+      font-size: 1.2rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: var(--accent);
+    }
+    .brand span { color: var(--red); }
+    .status-pill {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.78rem;
+      color: var(--green);
+      font-family: var(--mono);
+    }
+    .pulse {
+      width: 8px; height: 8px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(46,213,115,0.5); }
+      50% { opacity: 0.8; transform: scale(1.2); box-shadow: 0 0 0 5px rgba(46,213,115,0); }
+    }
+    .timestamp { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); }
+
+    /* ── LAYOUT ───────────────────────────────────────────────── */
+    .layout { display: grid; grid-template-columns: 220px 1fr; height: calc(100vh - 56px); }
+
+    /* ── SIDEBAR ──────────────────────────────────────────────── */
+    .sidebar {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 1.5rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .sidebar-section {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin: 1rem 0 0.3rem 0.5rem;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.55rem 0.8rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      color: #7a9ab5;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+    }
+    .nav-item:hover, .nav-item.active {
+      background: rgba(0,212,255,0.08);
+      color: var(--accent);
+      border-color: rgba(0,212,255,0.15);
+    }
+    .badge {
+      margin-left: auto;
+      background: var(--red);
+      color: #fff;
+      font-size: 0.65rem;
+      padding: 1px 6px;
+      border-radius: 10px;
+      font-weight: 700;
+    }
+
+    /* ── MAIN ─────────────────────────────────────────────────── */
+    .main { overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.2rem; }
+
+    /* ── STAT CARDS ───────────────────────────────────────────── */
+    .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.1rem 1.3rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+    }
+    .stat-card.critical::before { background: var(--red); }
+    .stat-card.high::before     { background: var(--orange); }
+    .stat-card.medium::before   { background: var(--yellow); }
+    .stat-card.total::before    { background: var(--accent); }
+
+    .stat-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); }
+    .stat-value { font-size: 2.2rem; font-weight: 800; line-height: 1; margin: 0.2rem 0; }
+    .stat-card.critical .stat-value { color: var(--red); }
+    .stat-card.high .stat-value     { color: var(--orange); }
+    .stat-card.medium .stat-value   { color: var(--yellow); }
+    .stat-card.total .stat-value    { color: var(--accent); }
+    .stat-sub { font-size: 0.75rem; color: var(--muted); }
+
+    /* ── GRID ─────────────────────────────────────────────────── */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+    .grid-3 { display: grid; grid-template-columns: 2fr 1fr; gap: 1.2rem; }
+
+    /* ── PANEL ────────────────────────────────────────────────── */
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .panel-header {
+      padding: 0.8rem 1.2rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--accent);
+      text-transform: uppercase;
+    }
+    .panel-body { padding: 1rem 1.2rem; }
+
+    /* ── ALERT TABLE ──────────────────────────────────────────── */
+    .alert-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; font-family: var(--mono); }
+    .alert-table th {
+      text-align: left;
+      color: var(--muted);
+      font-size: 0.65rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 0 0.6rem 0.6rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .alert-table td {
+      padding: 0.5rem 0.6rem;
+      border-bottom: 1px solid rgba(26,48,80,0.5);
+      vertical-align: middle;
+    }
+    .alert-table tr:last-child td { border-bottom: none; }
+    .alert-table tr:hover td { background: rgba(0,212,255,0.03); }
+
+    .sev-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .sev-CRITICAL { background: rgba(255,71,87,0.2);  color: var(--red); border: 1px solid rgba(255,71,87,0.4); }
+    .sev-HIGH     { background: rgba(255,127,0,0.2);  color: var(--orange); border: 1px solid rgba(255,127,0,0.4); }
+    .sev-MEDIUM   { background: rgba(255,215,0,0.15); color: var(--yellow); border: 1px solid rgba(255,215,0,0.3); }
+    .sev-LOW      { background: rgba(74,112,144,0.2); color: var(--muted);  border: 1px solid rgba(74,112,144,0.4); }
+
+    .ip-cell { color: var(--accent); }
+
+    /* ── IP LEADERBOARD ───────────────────────────────────────── */
+    .ip-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.4rem 0;
+      border-bottom: 1px solid rgba(26,48,80,0.4);
+      font-size: 0.78rem;
+    }
+    .ip-row:last-child { border-bottom: none; }
+    .ip-row .ip { font-family: var(--mono); color: var(--accent); }
+    .ip-bar-wrap { flex: 1; margin: 0 0.8rem; height: 4px; background: var(--border); border-radius: 2px; }
+    .ip-bar { height: 4px; border-radius: 2px; background: linear-gradient(90deg, var(--red), var(--orange)); }
+
+    /* ── ATTACK TYPE PILLS ────────────────────────────────────── */
+    .attack-pill {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.45rem 0.7rem;
+      margin-bottom: 0.4rem;
+      background: rgba(255,255,255,0.03);
+      border-radius: 6px;
+      border-left: 3px solid;
+      font-size: 0.8rem;
+    }
+    .attack-pill .count {
+      font-family: var(--mono);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    /* ── CHART CANVAS ─────────────────────────────────────────── */
+    canvas { max-height: 180px; }
+
+    /* ── EMPTY STATE ──────────────────────────────────────────── */
+    .empty {
+      text-align: center;
+      padding: 2rem;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    .empty span { display: block; font-size: 2rem; margin-bottom: 0.5rem; }
+
+    .refresh-info { font-size: 0.7rem; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="brand">MX<span>DR</span> // THREAT INTELLIGENCE CENTER</div>
+    <div style="display:flex;align-items:center;gap:1.5rem">
+      <div class="status-pill">
+        <div class="pulse"></div>
+        LIVE MONITORING
+      </div>
+      <div class="timestamp" id="clock">--:--:-- UTC</div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <div class="sidebar">
+      <div class="sidebar-section">Navigation</div>
+      <div class="nav-item active">📡 Live Alerts</div>
+      <div class="nav-item">🌐 Traffic Map</div>
+      <div class="nav-item">📊 Analytics</div>
+      <div class="sidebar-section">Modules</div>
+      <div class="nav-item">🛡️ IDS Rules</div>
+      <div class="nav-item">🤖 ML Engine</div>
+      <div class="nav-item">📋 Reports</div>
+      <div class="sidebar-section">Target</div>
+      <div class="nav-item">🚂 IndiaRail Site <div class="badge">ACTIVE</div></div>
+    </div>
+
+    <div class="main" id="main">
+      <!-- STAT ROW -->
+      <div class="stat-row">
+        <div class="stat-card total">
+          <div class="stat-label">Total Alerts</div>
+          <div class="stat-value" id="cnt-total">0</div>
+          <div class="stat-sub">All time events</div>
+        </div>
+        <div class="stat-card critical">
+          <div class="stat-label">Critical</div>
+          <div class="stat-value" id="cnt-critical">0</div>
+          <div class="stat-sub">Immediate action</div>
+        </div>
+        <div class="stat-card high">
+          <div class="stat-label">High</div>
+          <div class="stat-value" id="cnt-high">0</div>
+          <div class="stat-sub">High risk events</div>
+        </div>
+        <div class="stat-card medium">
+          <div class="stat-label">Medium / Low</div>
+          <div class="stat-value" id="cnt-medium">0</div>
+          <div class="stat-sub">Recon & suspicious</div>
+        </div>
+      </div>
+
+      <!-- TIMELINE CHART + ATTACK TYPES -->
+      <div class="grid-2">
+        <div class="panel">
+          <div class="panel-header">
+            📈 Alert Timeline
+            <span class="refresh-info">Refreshes every 5s</span>
+          </div>
+          <div class="panel-body">
+            <canvas id="timelineChart"></canvas>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header">🔬 Attack Type Breakdown</div>
+          <div class="panel-body" id="attackTypes">
+            <div class="empty"><span>🔍</span>Waiting for attacks...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EVENTS TABLE + TOP IPs -->
+      <div class="grid-3">
+        <div class="panel">
+          <div class="panel-header">
+            ⚡ Live Security Events
+            <span class="refresh-info" id="last-update">Never</span>
+          </div>
+          <div class="panel-body" style="padding:0">
+            <table class="alert-table">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>IP Address</th>
+                  <th>Attack Type</th>
+                  <th>Severity</th>
+                  <th>Path</th>
+                  <th>Detail</th>
+                </tr>
+              </thead>
+              <tbody id="eventsBody">
+                <tr><td colspan="6" class="empty"><span>📭</span>No events yet. Start the target site and generate traffic.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">🎯 Top Attacker IPs</div>
+          <div class="panel-body" id="topIPs">
+            <div class="empty"><span>👀</span>Watching...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Clock
+    setInterval(() => {
+      document.getElementById('clock').textContent =
+        new Date().toISOString().replace('T', ' ').slice(0, 19) + ' UTC';
+    }, 1000);
+
+    // Chart
+    const ctx = document.getElementById('timelineChart').getContext('2d');
+    const timelineChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [{
+          label: 'Alerts',
+          data: [],
+          borderColor: '#00d4ff',
+          backgroundColor: 'rgba(0,212,255,0.08)',
+          fill: true,
+          tension: 0.4,
+          pointRadius: 3,
+          pointBackgroundColor: '#00d4ff',
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: '#4a7090', font: { size: 10 } }, grid: { color: '#0f1f35' } },
+          y: { ticks: { color: '#4a7090', font: { size: 10 } }, grid: { color: '#0f1f35' },
+               beginAtZero: true }
+        }
+      }
+    });
+
+    const SEV_ORDER = { CRITICAL: 0, HIGH: 1, MEDIUM: 2, LOW: 3 };
+    const ATTACK_COLORS = {
+      'SQL Injection': '#e74c3c',
+      'Xss Attack': '#e67e22',
+      'Path Traversal': '#f39c12',
+      'Scanner / Recon': '#a855f7',
+      'Brute Force': '#c0392b',
+      'Suspicious Request': '#7f8c8d',
+    };
+
+    async function fetchAll() {
+      try {
+        const [statsRes, eventsRes, timeRes] = await Promise.all([
+          fetch('/api/stats'),
+          fetch('/api/events'),
+          fetch('/api/timeline'),
+        ]);
+        const stats   = await statsRes.json();
+        const evData  = await eventsRes.json();
+        const timData = await timeRes.json();
+
+        updateStats(stats);
+        updateEvents(evData.events);
+        updateTimeline(timData.timeline);
+        updateTopIPs(stats.top_attacker_ips);
+        updateAttackTypes(stats.attack_type_counts);
+
+        document.getElementById('last-update').textContent =
+          'Updated ' + new Date().toLocaleTimeString();
+      } catch (e) {
+        console.warn('API not reachable — using demo data');
+        injectDemoData();
+      }
+    }
+
+    function updateStats(s) {
+      document.getElementById('cnt-total').textContent    = s.total_alerts || 0;
+      document.getElementById('cnt-critical').textContent = (s.severity_counts?.CRITICAL || 0);
+      document.getElementById('cnt-high').textContent     = (s.severity_counts?.HIGH || 0);
+      document.getElementById('cnt-medium').textContent   =
+        ((s.severity_counts?.MEDIUM || 0) + (s.severity_counts?.LOW || 0));
+    }
+
+    function updateEvents(evts) {
+      if (!evts || evts.length === 0) return;
+      const tbody = document.getElementById('eventsBody');
+      tbody.innerHTML = evts.slice(0, 50).map(e => `
+        <tr>
+          <td>${e.timestamp?.slice(11,19) || '--'}</td>
+          <td class="ip-cell">${e.ip || '--'}</td>
+          <td>${e.attack_type || 'Unknown'}</td>
+          <td><span class="sev-badge sev-${e.severity || 'LOW'}">${e.severity || 'LOW'}</span></td>
+          <td style="color:#7a9ab5;max-width:120px;overflow:hidden;text-overflow:ellipsis">${e.path || '/'}</td>
+          <td style="color:#6a8ca0;max-width:180px;overflow:hidden;text-overflow:ellipsis">${e.detail || ''}</td>
+        </tr>
+      `).join('');
+    }
+
+    function updateTimeline(data) {
+      if (!data || data.length === 0) return;
+      timelineChart.data.labels = data.map(d => d.time.slice(11));
+      timelineChart.data.datasets[0].data = data.map(d => d.count);
+      timelineChart.update('none');
+    }
+
+    function updateTopIPs(ips) {
+      if (!ips || ips.length === 0) return;
+      const max = ips[0]?.alerts || 1;
+      document.getElementById('topIPs').innerHTML = ips.map(ip => `
+        <div class="ip-row">
+          <span class="ip">${ip.ip}</span>
+          <div class="ip-bar-wrap"><div class="ip-bar" style="width:${Math.round((ip.alerts/max)*100)}%"></div></div>
+          <span style="font-family:var(--mono);color:var(--red);font-size:0.8rem">${ip.alerts}</span>
+        </div>
+      `).join('');
+    }
+
+    function updateAttackTypes(types) {
+      if (!types || Object.keys(types).length === 0) return;
+      const sorted = Object.entries(types).sort((a,b) => b[1] - a[1]);
+      const total  = sorted.reduce((s,[,c]) => s+c, 0);
+      document.getElementById('attackTypes').innerHTML = sorted.map(([name, count]) => {
+        const pct   = Math.round((count/total)*100);
+        const color = ATTACK_COLORS[name] || '#4a7090';
+        return `
+          <div class="attack-pill" style="border-color:${color}">
+            <span style="color:${color}">${name}</span>
+            <span class="count" style="color:${color}">${count}</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ── DEMO DATA (when API unavailable) ───────────────────────
+    function injectDemoData() {
+      document.getElementById('cnt-total').textContent    = 47;
+      document.getElementById('cnt-critical').textContent = 8;
+      document.getElementById('cnt-high').textContent     = 19;
+      document.getElementById('cnt-medium').textContent   = 20;
+
+      const demoEvents = [
+        { timestamp:'12:34:01', ip:'192.168.1.105', attack_type:'SQL Injection',    severity:'HIGH',     path:'/login',  detail:"Pattern: UNION SELECT" },
+        { timestamp:'12:34:15', ip:'10.0.0.23',     attack_type:'Brute Force',       severity:'CRITICAL', path:'/login',  detail:'14 POSTs in 60s' },
+        { timestamp:'12:35:02', ip:'172.16.0.44',   attack_type:'XSS Attack',        severity:'HIGH',     path:'/search', detail:'<script>alert' },
+        { timestamp:'12:35:18', ip:'192.168.1.105', attack_type:'Scanner / Recon',   severity:'MEDIUM',   path:'/',       detail:'sqlmap/1.7 UA' },
+        { timestamp:'12:36:00', ip:'10.10.10.10',   attack_type:'Path Traversal',    severity:'MEDIUM',   path:'/static', detail:'../etc/passwd' },
+        { timestamp:'12:36:22', ip:'10.0.0.23',     attack_type:'Suspicious Request',severity:'LOW',      path:'/.env',   detail:'.env file probe' },
+      ];
+      document.getElementById('eventsBody').innerHTML = demoEvents.map(e => `
+        <tr>
+          <td>${e.timestamp}</td>
+          <td class="ip-cell">${e.ip}</td>
+          <td>${e.attack_type}</td>
+          <td><span class="sev-badge sev-${e.severity}">${e.severity}</span></td>
+          <td style="color:#7a9ab5">${e.path}</td>
+          <td style="color:#6a8ca0">${e.detail}</td>
+        </tr>
+      `).join('');
+
+      timelineChart.data.labels = ['12:30','12:31','12:32','12:33','12:34','12:35','12:36'];
+      timelineChart.data.datasets[0].data = [2, 5, 3, 7, 12, 9, 9];
+      timelineChart.update('none');
+
+      document.getElementById('topIPs').innerHTML = [
+        { ip:'10.0.0.23', alerts:22 }, { ip:'192.168.1.105', alerts:14 },
+        { ip:'172.16.0.44', alerts:7 }, { ip:'10.10.10.10', alerts:4 }
+      ].map(ip => `
+        <div class="ip-row">
+          <span class="ip">${ip.ip}</span>
+          <div class="ip-bar-wrap"><div class="ip-bar" style="width:${Math.round(ip.alerts/22*100)}%"></div></div>
+          <span style="font-family:var(--mono);color:var(--red);font-size:0.8rem">${ip.alerts}</span>
+        </div>`).join('');
+
+      document.getElementById('attackTypes').innerHTML = [
+        ['SQL Injection', 19, '#e74c3c'], ['Brute Force', 14, '#c0392b'],
+        ['XSS Attack', 8, '#e67e22'], ['Scanner / Recon', 4, '#a855f7'], ['Path Traversal', 2, '#f39c12']
+      ].map(([n,c,col]) => `
+        <div class="attack-pill" style="border-color:${col}">
+          <span style="color:${col}">${n}</span>
+          <span class="count" style="color:${col}">${c}</span>
+        </div>`).join('');
+    }
+
+    // Kick off
+    fetchAll();
+    setInterval(fetchAll, 5000);
+  </script>
+</body>
+</html>

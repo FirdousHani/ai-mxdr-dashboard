@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>IndiaRail Express - Book Train Tickets</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Noto+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --rail-blue: #0a2540;
+      --rail-orange: #f47b20;
+      --rail-gold: #f5c518;
+      --rail-green: #2d6a4f;
+      --surface: #f0f4f8;
+      --card: #ffffff;
+      --text: #1a1a2e;
+      --muted: #6b7c93;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Noto Sans', sans-serif;
+      background: var(--surface);
+      color: var(--text);
+    }
+    header {
+      background: var(--rail-blue);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+    }
+    .logo {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--rail-gold);
+      letter-spacing: 1px;
+    }
+    .logo span { color: var(--rail-orange); }
+    nav a {
+      color: #cdd5e0;
+      text-decoration: none;
+      margin-left: 1.5rem;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: var(--rail-gold); }
+
+    .hero {
+      background: linear-gradient(135deg, var(--rail-blue) 0%, #1a3a5c 60%, #0f2d4a 100%);
+      padding: 3rem 2rem 4rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 60px;
+      background: var(--surface);
+      clip-path: ellipse(55% 100% at 50% 100%);
+    }
+    .hero h1 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 2.6rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+    .hero p { color: #a0b4c8; font-size: 1rem; }
+
+    .booking-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 2rem;
+      max-width: 760px;
+      margin: -1.5rem auto 2rem;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+      position: relative;
+      z-index: 10;
+    }
+    .booking-card h2 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.3rem;
+      color: var(--rail-blue);
+      margin-bottom: 1.2rem;
+      border-bottom: 2px solid var(--rail-orange);
+      padding-bottom: 0.5rem;
+      display: inline-block;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+    .form-group label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.4rem;
+    }
+    .form-group input, .form-group select {
+      border: 1.5px solid #dce3ec;
+      border-radius: 8px;
+      padding: 0.7rem 1rem;
+      font-size: 0.95rem;
+      font-family: inherit;
+      color: var(--text);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      background: #f8fafc;
+    }
+    .form-group input:focus, .form-group select:focus {
+      outline: none;
+      border-color: var(--rail-orange);
+      box-shadow: 0 0 0 3px rgba(244,123,32,0.12);
+      background: #fff;
+    }
+    .full-width { grid-column: 1 / -1; }
+    .search-btn {
+      margin-top: 1rem;
+      width: 100%;
+      padding: 0.85rem;
+      background: linear-gradient(90deg, var(--rail-orange), #e8600a);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.05rem;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .search-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(244,123,32,0.35);
+    }
+
+    /* Login Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(10,37,64,0.7);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal {
+      background: #fff;
+      border-radius: 16px;
+      padding: 2.5rem;
+      width: 380px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      position: relative;
+    }
+    .modal h3 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.5rem;
+      color: var(--rail-blue);
+      margin-bottom: 1.5rem;
+    }
+    .modal .form-group { margin-bottom: 1rem; }
+    .modal-btn {
+      width: 100%;
+      padding: 0.8rem;
+      background: var(--rail-blue);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 0.5rem;
+    }
+    .close-modal {
+      position: absolute;
+      top: 1rem; right: 1rem;
+      background: none; border: none;
+      font-size: 1.3rem; cursor: pointer; color: #666;
+    }
+    .error-msg {
+      display: none;
+      color: #c0392b;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      background: #fdf0ef;
+      border-radius: 6px;
+      border-left: 3px solid #c0392b;
+    }
+    .trains-section {
+      max-width: 760px;
+      margin: 0 auto 3rem;
+      padding: 0 1rem;
+    }
+    .train-card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 1.2rem 1.5rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-left: 4px solid var(--rail-orange);
+    }
+    .train-info h4 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.1rem;
+      color: var(--rail-blue);
+    }
+    .train-info span {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .train-times { text-align: center; }
+    .train-times strong { font-size: 1.1rem; color: var(--text); }
+    .train-times small { display: block; font-size: 0.75rem; color: var(--muted); }
+    .book-now {
+      padding: 0.5rem 1.2rem;
+      background: var(--rail-green);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    footer {
+      background: var(--rail-blue);
+      color: #a0b4c8;
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">India<span>Rail</span> Express</div>
+    <nav>
+      <a href="/index.html">Home</a>
+      <a href="/pnr.html">PNR Status</a>
+      <a href="/trains.html">Train List</a>
+      <a href="#" onclick="openLogin()">Login</a>
+    </nav>
+  </header>
+
+  <div class="hero">
+    <h1>Book Train Tickets Instantly</h1>
+    <p>Fast, secure, and convenient railway booking across India</p>
+  </div>
+
+  <div class="booking-card">
+    <h2>Search Trains</h2>
+    <form id="searchForm" action="/search" method="GET" onsubmit="handleSearch(event)">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>From Station</label>
+          <input type="text" name="from" id="from" placeholder="e.g. New Delhi (NDLS)" required />
+        </div>
+        <div class="form-group">
+          <label>To Station</label>
+          <input type="text" name="to" id="to" placeholder="e.g. Mumbai CST (CSTM)" required />
+        </div>
+        <div class="form-group">
+          <label>Journey Date</label>
+          <input type="date" name="date" id="date" required />
+        </div>
+        <div class="form-group">
+          <label>Class</label>
+          <select name="class" id="class">
+            <option value="SL">Sleeper (SL)</option>
+            <option value="3A">AC 3 Tier (3A)</option>
+            <option value="2A">AC 2 Tier (2A)</option>
+            <option value="1A">AC First Class (1A)</option>
+          </select>
+        </div>
+        <div class="form-group full-width">
+          <label>Passengers</label>
+          <input type="number" name="passengers" id="passengers" value="1" min="1" max="6" />
+        </div>
+      </div>
+      <button type="submit" class="search-btn">🔍 SEARCH TRAINS</button>
+    </form>
+  </div>
+
+  <div class="trains-section" id="trainResults" style="display:none">
+    <h2 style="font-family:Rajdhani;color:var(--rail-blue);margin-bottom:1rem">Available Trains</h2>
+    <div id="trainList"></div>
+  </div>
+
+  <!-- Login Modal -->
+  <div class="modal-overlay" id="loginModal">
+    <div class="modal">
+      <button class="close-modal" onclick="closeLogin()">✕</button>
+      <h3>🚂 Passenger Login</h3>
+      <form id="loginForm" action="/login" method="POST" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label>Username / Email</label>
+          <input type="text" name="username" id="username" placeholder="Enter your username" required />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" name="password" id="password" placeholder="Enter password" required />
+        </div>
+        <div class="error-msg" id="loginError">Invalid username or password.</div>
+        <button type="submit" class="modal-btn">LOGIN</button>
+      </form>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2024 IndiaRail Express · Government of India · Ministry of Railways</p>
+    <p style="margin-top:0.3rem">For support call 139 · helpdesk@indiarail.gov.in</p>
+  </footer>
+
+  <script>
+    // Set min date to today
+    document.getElementById('date').min = new Date().toISOString().split('T')[0];
+    document.getElementById('date').value = new Date().toISOString().split('T')[0];
+
+    function openLogin() { document.getElementById('loginModal').classList.add('active'); }
+    function closeLogin() { document.getElementById('loginModal').classList.remove('active'); }
+
+    function handleSearch(e) {
+      e.preventDefault();
+      const from = document.getElementById('from').value;
+      const to = document.getElementById('to').value;
+      const trains = [
+        { name: "Rajdhani Express", no: "12951", dep: "16:55", arr: "08:35", dur: "15h 40m", avail: 42 },
+        { name: "Shatabdi Express", no: "12002", dep: "06:00", arr: "14:25", dur: "8h 25m", avail: 18 },
+        { name: "Duronto Express", no: "12213", dep: "23:15", arr: "15:05", dur: "15h 50m", avail: 67 },
+        { name: "Garib Rath", no: "12909", dep: "18:00", arr: "11:30", dur: "17h 30m", avail: 94 },
+      ];
+      const listEl = document.getElementById('trainList');
+      listEl.innerHTML = trains.map(t => `
+        <div class="train-card">
+          <div class="train-info">
+            <h4>${t.name}</h4>
+            <span>Train #${t.no} · ${from} → ${to}</span>
+          </div>
+          <div class="train-times">
+            <strong>${t.dep} → ${t.arr}</strong>
+            <small>${t.dur}</small>
+          </div>
+          <div>
+            <small style="color:var(--rail-green);font-weight:600">${t.avail} seats</small><br/>
+            <button class="book-now" onclick="openLogin()">Book</button>
+          </div>
+        </div>
+      `).join('');
+      document.getElementById('trainResults').style.display = 'block';
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const user = document.getElementById('username').value;
+      const pass = document.getElementById('password').value;
+      // Always show error (dummy site - intentionally vulnerable for demo)
+      document.getElementById('loginError').style.display = 'block';
+      // Log attempt
+      fetch('/api/log', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ event: 'login_attempt', username: user, timestamp: new Date().toISOString() })
+      }).catch(() => {});
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,520 @@
+{
+  "events": [
+    {
+      "id": 1772624004557,
+      "timestamp": "2026-03-04T17:03:24",
+      "ip": "127.0.0.1",
+      "attack_type": "SQL Injection",
+      "severity": "HIGH",
+      "color": "#e74c3c",
+      "detail": "Pattern: ('|--|;|/\\*|\\*/)",
+      "path": "/login",
+      "user_agent": "python-requests/2.32.5"
+    },
+    {
+      "id": 1772624006559,
+      "timestamp": "2026-03-04T17:03:24",
+      "ip": "127.0.0.1",
+      "attack_type": "SQL Injection",
+      "severity": "HIGH",
+      "color": "#e74c3c",
+      "detail": "Pattern: ('|--|;|/\\*|\\*/)",
+      "path": "/search",
+      "user_agent": "python-requests/2.32.5"
+    },
+    {
+      "id": 1772624006560,
+      "timestamp": "2026-03-04T17:03:25",
+      "ip": "127.0.0.1",
+      "attack_type": "SQL Injection",
+      "severity": "HIGH",
+      "color": "#e74c3c",
+      "detail": "Pattern: ('|--|;|/\\*|\\*/)",
+      "path": "/search",
+      "user_agent": "python-requests/2.32.5"
+    },
+    {
+      "id": 1772624006562,
+      "timestamp": "2026-03-04T17:03:26",
+      "ip": "127.0.0.1",
+      "attack_type": "SQL Injection",
+      "severity": "HIGH",
+      "color": "#e74c3c",
+      "detail": "Pattern: ('|--|;|/\\*|\\*/)",
+      "path": "/login",
+      "user_agent": "python-requests/2.32.5"
+    },
+    {
+      "id": 1772624008564,
+      "timestamp": "2026-03-04T17:03:26",
+      "ip": "127.0.0.1",
+      "attack_type": "SQL Injection",
+      "severity": "HIGH",
+      "color": "#e74c3c",
+      "detail": "Pattern: ('|--|;|/\\*|\\*/)",
+      "path": "/search",
+      "user_agent": "python-requests/2.32.5"
+    },
+    {
+      "id": 1772624008565,
+      "timestamp": "2026-03-04T17:03:27",
+      "ip": "127.0.0.1",
+      "attack_type": "XSS Attack",
+      "severity": "HIGH",
+      "color": "#e67e22",
+      "detail": "Pattern: alert\\s*\\(",
+      "path": "/search",
+      "user_agent": "python-requests/2.32.5"
+    },
+    {
+      "id": 1772624008566,
+      "timestamp": "2026-03-04T17:03:27",
+      "ip": "127.0.0.1",
+      "attack_type": "XSS Attack",
+      "severity": "HIGH",
+      "color": "#e67e22",
+      "detail": "Pattern: (onerror|onload|onclick|onmouseover)\\s*=",
+      "path": "/search",
+      "user_agent": "python-requests/2.32.5"
+    },
+    {
+      "id": 1772624008567,
+      "timestamp": "2026-03-04T17:03:28",
+      "ip": "127.0.0.1",
+      "attack_type": "SQL Injection",
+      "severity": "HIGH",
+      "color": "#e74c3c",
+      "detail": "Pattern: ('|--|;|/\\*|\\*/)",
+      "path": "/login",
+      "user_agent": "python-requests/2.32.5"
+    },
+    {
+      "id": 1772624010569,
+      "timestamp": "2026-03-04T17:03:28",
+      "ip": "127.0.0.1",
+      "attack_type": "XSS Attack",
+      "severity": "HIGH",
+      "color": "#e67e22",
+      "detail": "Pattern: javascript:",
+      "path": "/pnr",
+      "user_agent": "python-requests/2.32.5"
+    },
+    {
+      "id": 1772624010571,
+      "timestamp": "2026-03-04T17:03:29",
+      "ip": "127.0.0.1",
+      "attack_type": "Path Traversal",
+      "severity": "MEDIUM",
+      "color": "#f39c12",
+      "detail": "Pattern: etc/passwd",
+      "path": "/etc/passwd",
+      "user_agent": "python-requests/2.32.5"
+    },
+    {
+      "id": 1772624010572,
+      "timestamp": "2026-03-04T17:03:29",
+      "ip": "127.0.0.1",
+      "attack_type": "Path Traversal",
+      "severity": "MEDIUM",
+      "color": "#f39c12",
+      "detail": "Pattern: etc/shadow",
+      "path": "/etc/shadow",
+      "user_agent": "python-requests/2.32.5"
+    },
+    {
+      "id": 1772624010573,
+      "timestamp": "2026-03-04T17:03:30",
+      "ip": "127.0.0.1",
+      "attack_type": "Path Traversal",
+      "severity": "MEDIUM",
+      "color": "#f39c12",
+      "detail": "Pattern: \\.\\./",
+      "path": "/images/../../etc/passwd",
+      "user_agent": "python-requests/2.32.5"
+    },
+    {
+      "id": 1772624012575,
+      "timestamp": "2026-03-04T17:03:31",
+      "ip": "127.0.0.1",
+      "attack_type": "Suspicious Request",
+      "severity": "LOW",
+      "color": "#7f8c8d",
+      "detail": "Pattern: (\\bphpMyAdmin\\b|\\bwp-login\\b|\\b\\.env\\b|\\b\\.git\\b|\\",
+      "path": "/backup.sql",
+      "user_agent": "python-requests/2.32.5"
+    },
+    {
+      "id": 1772624012575,
+      "timestamp": "2026-03-04T17:03:32",
+      "ip": "127.0.0.1",
+      "attack_type": "Scanner / Recon",
+      "severity": "MEDIUM",
+      "color": "#8e44ad",
+      "detail": "Pattern: (sqlmap|nikto|nmap|nessus|acunetix|burp|dirbuster|",
+      "path": "/login",
+      "user_agent": "sqlmap/1.7.8#stable (https://sqlmap.org)"
+    },
+    {
+      "id": 1772624014577,
+      "timestamp": "2026-03-04T17:03:32",
+      "ip": "127.0.0.1",
+      "attack_type": "Scanner / Recon",
+      "severity": "MEDIUM",
+      "color": "#8e44ad",
+      "detail": "Pattern: (sqlmap|nikto|nmap|nessus|acunetix|burp|dirbuster|",
+      "path": "/",
+      "user_agent": "Nikto/2.1.6"
+    },
+    {
+      "id": 1772624014577,
+      "timestamp": "2026-03-04T17:03:33",
+      "ip": "127.0.0.1",
+      "attack_type": "Scanner / Recon",
+      "severity": "MEDIUM",
+      "color": "#8e44ad",
+      "detail": "Pattern: (sqlmap|nikto|nmap|nessus|acunetix|burp|dirbuster|",
+      "path": "/admin",
+      "user_agent": "Mozilla/5.0 (compatible; Nessus; +https://www.nessus.org)"
+    },
+    {
+      "id": 1772624014577,
+      "timestamp": "2026-03-04T17:03:33",
+      "ip": "127.0.0.1",
+      "attack_type": "Scanner / Recon",
+      "severity": "MEDIUM",
+      "color": "#8e44ad",
+      "detail": "Pattern: (sqlmap|nikto|nmap|nessus|acunetix|burp|dirbuster|",
+      "path": "/admin/config",
+      "user_agent": "DirBuster-1.0-RC1"
+    },
+    {
+      "id": 1772624014578,
+      "timestamp": "2026-03-04T17:03:34",
+      "ip": "127.0.0.1",
+      "attack_type": "Scanner / Recon",
+      "severity": "MEDIUM",
+      "color": "#8e44ad",
+      "detail": "Pattern: (sqlmap|nikto|nmap|nessus|acunetix|burp|dirbuster|",
+      "path": "/api/",
+      "user_agent": "wfuzz/3.1.0"
+    },
+    {
+      "id": 1772624016579,
+      "timestamp": "2026-03-04T17:03:34",
+      "ip": "127.0.0.1",
+      "attack_type": "Scanner / Recon",
+      "severity": "MEDIUM",
+      "color": "#8e44ad",
+      "detail": "Pattern: (sqlmap|nikto|nmap|nessus|acunetix|burp|dirbuster|",
+      "path": "/backup",
+      "user_agent": "gobuster/3.6"
+    },
+    {
+      "id": 1772624020581,
+      "timestamp": "2026-03-04T17:03:39",
+      "ip": "127.0.0.1",
+      "attack_type": "Brute Force",
+      "severity": "CRITICAL",
+      "color": "#c0392b",
+      "detail": "8 POSTs to /login in 60s",
+      "path": "/login",
+      "user_agent": "python-requests/2.32.5"
+    },
+    {
+      "id": 1772624020583,
+      "timestamp": "2026-03-04T17:03:39",
+      "ip": "127.0.0.1",
+      "attack_type": "Brute Force",
+      "severity": "CRITICAL",
+      "color": "#c0392b",
+      "detail": "9 POSTs to /login in 60s",
+      "path": "/login",
+      "user_agent": "python-requests/2.32.5"
+    },
+    {
+      "id": 1772624020584,
+      "timestamp": "2026-03-04T17:03:40",
+      "ip": "127.0.0.1",
+      "attack_type": "Brute Force",
+      "severity": "CRITICAL",
+      "color": "#c0392b",
+      "detail": "10 POSTs to /login in 60s",
+      "path": "/login",
+      "user_agent": "python-requests/2.32.5"
+    },
+    {
+      "id": 1772624020587,
+      "timestamp": "2026-03-04T17:03:40",
+      "ip": "127.0.0.1",
+      "attack_type": "Brute Force",
+      "severity": "CRITICAL",
+      "color": "#c0392b",
+      "detail": "11 POSTs to /login in 60s",
+      "path": "/login",
+      "user_agent": "python-requests/2.32.5"
+    },
+    {
+      "id": 1772624022593,
+      "timestamp": "2026-03-04T17:03:41",
+      "ip": "127.0.0.1",
+      "attack_type": "Brute Force",
+      "severity": "CRITICAL",
+      "color": "#c0392b",
+      "detail": "12 POSTs to /login in 60s",
+      "path": "/login",
+      "user_agent": "python-requests/2.32.5"
+    },
+    {
+      "id": 1772624022594,
+      "timestamp": "2026-03-04T17:03:41",
+      "ip": "127.0.0.1",
+      "attack_type": "Suspicious Request",
+      "severity": "LOW",
+      "color": "#7f8c8d",
+      "detail": "Pattern: (\\bphpMyAdmin\\b|\\bwp-login\\b|\\b\\.env\\b|\\b\\.git\\b|\\",
+      "path": "/wp-login.php",
+      "user_agent": "python-requests/2.32.5"
+    },
+    {
+      "id": 1772624022595,
+      "timestamp": "2026-03-04T17:03:42",
+      "ip": "127.0.0.1",
+      "attack_type": "Suspicious Request",
+      "severity": "LOW",
+      "color": "#7f8c8d",
+      "detail": "Pattern: (\\bphpMyAdmin\\b|\\bwp-login\\b|\\b\\.env\\b|\\b\\.git\\b|\\",
+      "path": "/phpmyadmin/",
+      "user_agent": "python-requests/2.32.5"
+    },
+    {
+      "id": 1772624024597,
+      "timestamp": "2026-03-04T17:03:43",
+      "ip": "127.0.0.1",
+      "attack_type": "Suspicious Request",
+      "severity": "LOW",
+      "color": "#7f8c8d",
+      "detail": "Pattern: (\\bphpMyAdmin\\b|\\bwp-login\\b|\\b\\.env\\b|\\b\\.git\\b|\\",
+      "path": "/config.php.bak",
+      "user_agent": "python-requests/2.32.5"
+    },
+    {
+      "id": 1772624709013,
+      "timestamp": "2026-03-04T17:15:07",
+      "ip": "152.57.122.162",
+      "attack_type": "SQL Injection",
+      "severity": "HIGH",
+      "color": "#e74c3c",
+      "detail": "Pattern: ('|--|;|/\\*|\\*/)",
+      "path": "/login",
+      "user_agent": "python-requests/2.32.5"
+    },
+    {
+      "id": 1772624735029,
+      "timestamp": "2026-03-04T17:15:33",
+      "ip": "152.57.122.162",
+      "attack_type": "SQL Injection",
+      "severity": "HIGH",
+      "color": "#e74c3c",
+      "detail": "Pattern: ('|--|;|/\\*|\\*/)",
+      "path": "/search",
+      "user_agent": "python-requests/2.32.5"
+    },
+    {
+      "id": 1772624785053,
+      "timestamp": "2026-03-04T17:16:24",
+      "ip": "152.57.122.162",
+      "attack_type": "SQL Injection",
+      "severity": "HIGH",
+      "color": "#e74c3c",
+      "detail": "Pattern: ('|--|;|/\\*|\\*/)",
+      "path": "/search",
+      "user_agent": "python-requests/2.32.5"
+    },
+    {
+      "id": 1772624811061,
+      "timestamp": "2026-03-04T17:16:50",
+      "ip": "152.57.122.162",
+      "attack_type": "SQL Injection",
+      "severity": "HIGH",
+      "color": "#e74c3c",
+      "detail": "Pattern: ('|--|;|/\\*|\\*/)",
+      "path": "/login",
+      "user_agent": "python-requests/2.32.5"
+    },
+    {
+      "id": 1772624837076,
+      "timestamp": "2026-03-04T17:17:16",
+      "ip": "152.57.122.162",
+      "attack_type": "SQL Injection",
+      "severity": "HIGH",
+      "color": "#e74c3c",
+      "detail": "Pattern: ('|--|;|/\\*|\\*/)",
+      "path": "/search",
+      "user_agent": "python-requests/2.32.5"
+    },
+    {
+      "id": 1772624863085,
+      "timestamp": "2026-03-04T17:17:42",
+      "ip": "152.57.122.162",
+      "attack_type": "XSS Attack",
+      "severity": "HIGH",
+      "color": "#e67e22",
+      "detail": "Pattern: alert\\s*\\(",
+      "path": "/search",
+      "user_agent": "python-requests/2.32.5"
+    },
+    {
+      "id": 1772624889100,
+      "timestamp": "2026-03-04T17:18:08",
+      "ip": "152.57.122.162",
+      "attack_type": "XSS Attack",
+      "severity": "HIGH",
+      "color": "#e67e22",
+      "detail": "Pattern: (onerror|onload|onclick|onmouseover)\\s*=",
+      "path": "/search",
+      "user_agent": "python-requests/2.32.5"
+    },
+    {
+      "id": 1772624915109,
+      "timestamp": "2026-03-04T17:18:34",
+      "ip": "152.57.122.162",
+      "attack_type": "SQL Injection",
+      "severity": "HIGH",
+      "color": "#e74c3c",
+      "detail": "Pattern: ('|--|;|/\\*|\\*/)",
+      "path": "/login",
+      "user_agent": "python-requests/2.32.5"
+    },
+    {
+      "id": 1772624941118,
+      "timestamp": "2026-03-04T17:19:00",
+      "ip": "152.57.122.162",
+      "attack_type": "XSS Attack",
+      "severity": "HIGH",
+      "color": "#e67e22",
+      "detail": "Pattern: javascript:",
+      "path": "/pnr",
+      "user_agent": "python-requests/2.32.5"
+    },
+    {
+      "id": 1772624967136,
+      "timestamp": "2026-03-04T17:19:25",
+      "ip": "152.57.122.162",
+      "attack_type": "Path Traversal",
+      "severity": "MEDIUM",
+      "color": "#f39c12",
+      "detail": "Pattern: etc/passwd",
+      "path": "/etc/passwd",
+      "user_agent": "python-requests/2.32.5"
+    },
+    {
+      "id": 1772624993144,
+      "timestamp": "2026-03-04T17:19:51",
+      "ip": "152.57.122.162",
+      "attack_type": "Path Traversal",
+      "severity": "MEDIUM",
+      "color": "#f39c12",
+      "detail": "Pattern: etc/shadow",
+      "path": "/etc/shadow",
+      "user_agent": "python-requests/2.32.5"
+    },
+    {
+      "id": 1772625019157,
+      "timestamp": "2026-03-04T17:20:17",
+      "ip": "152.57.122.162",
+      "attack_type": "Path Traversal",
+      "severity": "MEDIUM",
+      "color": "#f39c12",
+      "detail": "Pattern: \\.\\./",
+      "path": "/images/../../etc/passwd",
+      "user_agent": "python-requests/2.32.5"
+    },
+    {
+      "id": 1772625097191,
+      "timestamp": "2026-03-04T17:21:35",
+      "ip": "152.57.122.162",
+      "attack_type": "Suspicious Request",
+      "severity": "LOW",
+      "color": "#7f8c8d",
+      "detail": "Pattern: (\\bphpMyAdmin\\b|\\bwp-login\\b|\\b\\.env\\b|\\b\\.git\\b|\\",
+      "path": "/backup.sql",
+      "user_agent": "python-requests/2.32.5"
+    },
+    {
+      "id": 1772625123203,
+      "timestamp": "2026-03-04T17:22:01",
+      "ip": "152.57.122.162",
+      "attack_type": "Scanner / Recon",
+      "severity": "MEDIUM",
+      "color": "#8e44ad",
+      "detail": "Pattern: (sqlmap|nikto|nmap|nessus|acunetix|burp|dirbuster|",
+      "path": "/login",
+      "user_agent": "sqlmap/1.7.8#stable (https://sqlmap.org)"
+    },
+    {
+      "id": 1772625147209,
+      "timestamp": "2026-03-04T17:22:27",
+      "ip": "152.57.122.162",
+      "attack_type": "Scanner / Recon",
+      "severity": "MEDIUM",
+      "color": "#8e44ad",
+      "detail": "Pattern: (sqlmap|nikto|nmap|nessus|acunetix|burp|dirbuster|",
+      "path": "/",
+      "user_agent": "Nikto/2.1.6"
+    },
+    {
+      "id": 1772625199221,
+      "timestamp": "2026-03-04T17:23:18",
+      "ip": "152.57.122.162",
+      "attack_type": "Scanner / Recon",
+      "severity": "MEDIUM",
+      "color": "#8e44ad",
+      "detail": "Pattern: (sqlmap|nikto|nmap|nessus|acunetix|burp|dirbuster|",
+      "path": "/admin/config",
+      "user_agent": "DirBuster-1.0-RC1"
+    },
+    {
+      "id": 1772625225228,
+      "timestamp": "2026-03-04T17:23:44",
+      "ip": "152.57.122.162",
+      "attack_type": "Scanner / Recon",
+      "severity": "MEDIUM",
+      "color": "#8e44ad",
+      "detail": "Pattern: (sqlmap|nikto|nmap|nessus|acunetix|burp|dirbuster|",
+      "path": "/api/",
+      "user_agent": "wfuzz/3.1.0"
+    },
+    {
+      "id": 1772625251240,
+      "timestamp": "2026-03-04T17:24:10",
+      "ip": "152.57.122.162",
+      "attack_type": "Scanner / Recon",
+      "severity": "MEDIUM",
+      "color": "#8e44ad",
+      "detail": "Pattern: (sqlmap|nikto|nmap|nessus|acunetix|burp|dirbuster|",
+      "path": "/backup",
+      "user_agent": "gobuster/3.6"
+    }
+  ],
+  "ip_stats": {
+    "127.0.0.1": {
+      "requests": 46,
+      "alerts": 27,
+      "first_seen": "2026-03-04T16:55:56",
+      "last_seen": "2026-03-04T17:03:45"
+    },
+    "2406:7400:121:f42f:5da8:4852:61e9:d198": {
+      "requests": 6,
+      "alerts": 0,
+      "first_seen": "2026-03-04T17:12:24",
+      "last_seen": "2026-03-04T17:14:57"
+    },
+    "152.57.122.162": {
+      "requests": 24,
+      "alerts": 18,
+      "first_seen": "2026-03-04T17:13:49",
+      "last_seen": "2026-03-04T17:24:10"
+    }
+  },
+  "updated": "2026-03-04T11:54:11.240424Z"
+}
